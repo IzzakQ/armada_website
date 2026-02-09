@@ -1,6 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 export default function LeadForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    const formData = {
+      name: e.target.name.value,
+      phone: e.target.phone.value,
+      from: e.target.from.value,
+      to: e.target.to.value,
+      cargo: e.target.cargo.options[e.target.cargo.selectedIndex].text,
+    };
+
+    try {
+      await emailjs.send(
+        'service_vm2wnwj',      // Замените на ваш Service ID
+        'template_elo5m4l',     // Замените на ваш Template ID
+        formData,
+        'MPhv6tMuzS5GgpDfn'       // Замените на ваш Public Key
+      );
+      
+      setSubmitStatus('success');
+      e.target.reset();
+    } catch (error) {
+      console.error('Ошибка отправки:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="lead-form" className="py-20 bg-slate-900 relative">
        {/* Background pattern */}
@@ -27,7 +62,7 @@ export default function LeadForm() {
           </div>
 
           <div className="md:w-2/3 p-10">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">Имя</label>
@@ -95,10 +130,23 @@ export default function LeadForm() {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition-colors uppercase tracking-widest text-sm shadow-lg hover:shadow-xl"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition-colors uppercase tracking-widest text-sm shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Отправить заявку
+                {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
               </button>
+
+              {submitStatus === 'success' && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded text-green-800 text-center">
+                  ✓ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded text-red-800 text-center">
+                  ✗ Ошибка отправки. Пожалуйста, попробуйте позже или позвоните нам.
+                </div>
+              )}
             </form>
           </div>
 
