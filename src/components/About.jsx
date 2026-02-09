@@ -10,9 +10,10 @@ export default function About() {
              <div className="relative">
                  <div className="absolute top-0 left-0 w-24 h-24 bg-blue-100 rounded-full -translate-x-4 -translate-y-4 z-0"></div>
                   <img 
-                    src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" 
+                    src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=75" 
                     alt="Company meeting" 
                     className="relative z-10 rounded-lg shadow-xl w-full object-cover h-[400px]"
+                    loading="lazy"
                   />
                   <div className="absolute bottom-0 right-0 w-32 h-32 bg-slate-100 rounded-full translate-x-4 translate-y-4 z-0"></div>
              </div>
